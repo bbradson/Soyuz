@@ -3,7 +3,7 @@ using RimWorld;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(Need_Rest), nameof(Need_Rest.TickResting))]
+    [SoyuzPatch(typeof(Need_Rest), nameof(Need_Rest.TickResting))]
     public class Need_Rest_TickResting_Patch
     {
         public static void Postfix(Need_Rest __instance)

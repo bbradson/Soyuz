@@ -7,7 +7,7 @@ using Verse.AI;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(JobDriver), nameof(JobDriver.DriverTick))]
+    [SoyuzPatch(typeof(JobDriver), nameof(JobDriver.DriverTick))]
     public class JobDriver_DriverTick_Patch
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
@@ -15,14 +15,14 @@ namespace Soyuz.Patches
         {
             var codes = instructions.MethodReplacer(
                 AccessTools.Method(typeof(Gen), nameof(Gen.IsHashIntervalTick), new[] {typeof(Thing), typeof(int)}),
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.IsCustomTickInterval))).ToList();
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsCustomTickInterval))).ToList();
             var l1 = generator.DefineLabel();
 
             yield return new CodeInstruction(OpCodes.Ldarg_0);
             yield return new CodeInstruction(OpCodes.Ldfld,
                 AccessTools.Field(typeof(JobDriver), nameof(JobDriver.pawn)));
             yield return new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.IsValidWildlifeOrWorldPawn)));
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsValidWildlifeOrWorldPawn)));
             yield return new CodeInstruction(OpCodes.Brfalse_S, l1);
 
 
@@ -30,7 +30,7 @@ namespace Soyuz.Patches
             yield return new CodeInstruction(OpCodes.Ldfld,
                 AccessTools.Field(typeof(JobDriver), nameof(JobDriver.pawn)));
             yield return new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.IsSkippingTicks)));
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsSkippingTicks)));
             yield return new CodeInstruction(OpCodes.Brfalse_S, l1);
 
             yield return new CodeInstruction(OpCodes.Ldarg_0);
@@ -42,7 +42,7 @@ namespace Soyuz.Patches
             yield return new CodeInstruction(OpCodes.Ldfld,
                 AccessTools.Field(typeof(JobDriver), nameof(JobDriver.pawn)));
             yield return new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.GetDeltaT)));
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.GetDeltaT)));
             yield return new CodeInstruction(OpCodes.Ldc_I4, 1);
             yield return new CodeInstruction(OpCodes.Sub);
 

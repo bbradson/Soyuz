@@ -3,7 +3,7 @@ using Verse;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(Hediff_Pregnant), nameof(Hediff_Pregnant.Tick))]
+    [SoyuzPatch(typeof(Hediff_Pregnant), nameof(Hediff_Pregnant.Tick))]
     public class Hediff_Pregnant_Tick_Patch
     {
         public static void Prefix(Hediff_Pregnant __instance)

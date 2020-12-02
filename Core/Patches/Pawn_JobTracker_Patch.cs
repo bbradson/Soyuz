@@ -6,7 +6,7 @@ using Verse.AI;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.JobTrackerTick))]
+    [SoyuzPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.JobTrackerTick))]
     public class Pawn_JobTracker_JobTrackerTick_Patch
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
@@ -14,7 +14,7 @@ namespace Soyuz.Patches
         {
             return  instructions.MethodReplacer(
                 AccessTools.Method(typeof(Gen), nameof(Gen.IsHashIntervalTick), new[] {typeof(Thing), typeof(int)}),
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.IsCustomTickInterval)));
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsCustomTickInterval)));
         }
     }
 }

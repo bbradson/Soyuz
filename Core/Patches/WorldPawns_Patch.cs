@@ -11,7 +11,7 @@ namespace Soyuz.Patches
 {
     public class WorldPawns_Patch
     {
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.ExposeData))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.ExposeData))]
         public static class WorldPawns_ExposeData_Patch
         {
             public static void Postfix(WorldPawns __instance)
@@ -20,7 +20,7 @@ namespace Soyuz.Patches
             }
         }
 
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.DoMothballProcessing))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.DoMothballProcessing))]
         public static class WorldPawns_DoMothballProcessing_Patch
         {
             public static void Postfix(WorldPawns __instance)
@@ -29,7 +29,7 @@ namespace Soyuz.Patches
             }
         }
 
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.AddPawn))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.AddPawn))]
         public static class WorldPawns_AddPawn_Patch
         {
             public static void Prefix(Pawn p)
@@ -38,7 +38,7 @@ namespace Soyuz.Patches
             }
         }
 
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.Notify_PawnDestroyed))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.Notify_PawnDestroyed))]
         public static class WorldPawns_Notify_PawnDestroyed_Patch
         {
             public static void Prefix(Pawn p)
@@ -47,7 +47,7 @@ namespace Soyuz.Patches
             }
         }
 
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.RemovePawn))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.RemovePawn))]
         public static class WorldPawns_RemovePawn_Patch
         {
             public static void Prefix(Pawn p)
@@ -56,11 +56,21 @@ namespace Soyuz.Patches
             }
         }
 
-        [HarmonyPatch(typeof(WorldPawns), nameof(WorldPawns.WorldPawnsTick))]
+        [SoyuzPatch(typeof(WorldPawns), nameof(WorldPawns.WorldPawnsTick))]
         public static class WorldPawns_WorldPawnsTick_Patch
         {
             private static readonly FieldInfo fAlivePawns =
                 AccessTools.Field(typeof(WorldPawns), nameof(WorldPawns.pawnsAlive));
+
+            public static void Prefix()
+            {
+                WorldPawnsTicker.isActive = true;
+            }
+            
+            public static void Postfix()
+            {
+                WorldPawnsTicker.isActive = false;
+            }
 
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
@@ -80,14 +90,13 @@ namespace Soyuz.Patches
                                     nameof(GetAlivePawns)));
                             continue;
                         }
-
                     yield return codes[i];
                 }
             }
 
             private static HashSet<Pawn> GetAlivePawns(HashSet<Pawn> pawns, WorldPawns instance)
             {
-                if (!Finder.timeDilation) return pawns;
+                if (!Finder.timeDilation || !Finder.timeDilationWorldPawns || !Finder.enabled) return pawns;
                 var result = WorldPawnsTicker.GetPawns();
                 if (Finder.debug && Finder.flashDilatedPawns) Log.Message($"ROCKETMAN: ticker bucket of {result.Count} from {pawns.Count} and index is {WorldPawnsTicker.curIndex}");
                 return result;

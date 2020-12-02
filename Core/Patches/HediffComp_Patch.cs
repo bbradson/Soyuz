@@ -8,35 +8,36 @@ namespace Soyuz.Patches
 {
     public class HediffComp_Patch
     {
-        [HarmonyPatch]
+        [SoyuzPatch]
         public static class HediffComp_GenHashInterval_Replacement
         {
-            public static IEnumerable<MethodBase> TargetMethods()
-            {
-                MethodBase method;
-                yield return AccessTools.Method(typeof(Hediff), nameof(Hediff.Tick));
-                foreach (var type in typeof(Hediff).AllSubclassesNonAbstract())
+                public static IEnumerable<MethodBase> TargetMethods()
                 {
-                    method = type.GetMethod("Tick");
-                    if (method != null && method.HasMethodBody()) yield return method;
+                    MethodBase method;
+                    yield return AccessTools.Method(typeof(Hediff), nameof(Hediff.Tick));
+                    foreach (var type in typeof(Hediff).AllSubclassesNonAbstract())
+                    {
+                        method = type.GetMethod("Tick");
+                        if (method != null && method.HasMethodBody()) yield return method;
+                    }
+                    
+                    yield return AccessTools.Method(typeof(HediffComp), nameof(HediffComp.CompPostTick));
+                    foreach (var type in typeof(HediffComp).AllSubclassesNonAbstract())
+                    {
+                        method = type.GetMethod("CompPostTick");
+                        if (method != null && method.HasMethodBody()) yield return method;
+                    }
                 }
-                
-                foreach (var type in typeof(HediffComp).AllSubclassesNonAbstract())
+
+                public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
                 {
-                    method = type.GetMethod("CompPostTick");
-                    if (method != null && method.HasMethodBody()) yield return method;
+                    return instructions.MethodReplacer(
+                        AccessTools.Method(typeof(Gen), nameof(Gen.IsHashIntervalTick), new[] {typeof(Thing), typeof(int)}),
+                        AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsCustomTickInterval)));
                 }
-            }
-            
-            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                return instructions.MethodReplacer(
-                    AccessTools.Method(typeof(Gen), nameof(Gen.IsHashIntervalTick), new[] {typeof(Thing), typeof(int)}),
-                    AccessTools.Method(typeof(Extensions), nameof(Extensions.IsCustomTickInterval)));
-            }
         }
         
-        [HarmonyPatch(typeof(HediffComp_ChanceToRemove), nameof(HediffComp_ChanceToRemove.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_ChanceToRemove), nameof(HediffComp_ChanceToRemove.CompPostTick))]
         public static class HediffComp_ChanceToRemove_Patch
         {
             public static void Prefix(HediffComp_ChanceToRemove __instance)
@@ -48,7 +49,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_ChangeNeed), nameof(HediffComp_ChangeNeed.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_ChangeNeed), nameof(HediffComp_ChangeNeed.CompPostTick))]
         public static class HediffComp_ChangeNeed_Patch
         {
             public static void Prefix(HediffComp_ChangeNeed __instance)
@@ -61,7 +62,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_Disappears), nameof(HediffComp_Disappears.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_Disappears), nameof(HediffComp_Disappears.CompPostTick))]
         public static class HediffComp_Disappears_Patch
         {
             public static void Prefix(HediffComp_Disappears __instance)
@@ -73,7 +74,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_Discoverable), nameof(HediffComp_Discoverable.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_Discoverable), nameof(HediffComp_Discoverable.CompPostTick))]
         public static class HediffComp_Discoverable_Patch
         {
             public static bool Prefix(HediffComp_Discoverable __instance)
@@ -87,7 +88,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_HealPermanentWounds), nameof(HediffComp_HealPermanentWounds.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_HealPermanentWounds), nameof(HediffComp_HealPermanentWounds.CompPostTick))]
         public static class HediffComp_HealPermanentWounds_Patch
         {
             public static void Prefix(HediffComp_HealPermanentWounds __instance)
@@ -99,7 +100,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_Infecter), nameof(HediffComp_Infecter.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_Infecter), nameof(HediffComp_Infecter.CompPostTick))]
         public static class HediffComp_Infecter_Patch
         {
             public static void Prefix(HediffComp_Infecter __instance)
@@ -111,7 +112,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_SelfHeal), nameof(HediffComp_SelfHeal.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_SelfHeal), nameof(HediffComp_SelfHeal.CompPostTick))]
         public static class HediffComp_SelfHeal_Patch
         {
             public static void Prefix(HediffComp_SelfHeal __instance)
@@ -123,7 +124,7 @@ namespace Soyuz.Patches
             }   
         }
         
-        [HarmonyPatch(typeof(HediffComp_TendDuration), nameof(HediffComp_TendDuration.CompPostTick))]
+        [SoyuzPatch(typeof(HediffComp_TendDuration), nameof(HediffComp_TendDuration.CompPostTick))]
         public static class HediffComp_TendDuration_Patch
         {
             public static void Prefix(HediffComp_TendDuration __instance)

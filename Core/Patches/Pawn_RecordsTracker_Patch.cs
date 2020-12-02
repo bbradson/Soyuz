@@ -7,7 +7,7 @@ using Verse;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(Pawn_RecordsTracker), nameof(Pawn_RecordsTracker.RecordsTick))]
+    [SoyuzPatch(typeof(Pawn_RecordsTracker), nameof(Pawn_RecordsTracker.RecordsTick))]
     public class Pawn_RecordsTracker_Patch
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
@@ -15,7 +15,7 @@ namespace Soyuz.Patches
         {
             var codes = instructions.MethodReplacer(
                 AccessTools.Method(typeof(Gen), nameof(Gen.IsHashIntervalTick), new[] {typeof(Thing), typeof(int)}),
-                AccessTools.Method(typeof(Extensions), nameof(Extensions.IsCustomTickInterval))).ToList();
+                AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.IsCustomTickInterval))).ToList();
             foreach (var code in codes)
             {
                 if (code.OperandIs(80))

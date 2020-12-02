@@ -4,7 +4,7 @@ using Verse;
 
 namespace Soyuz.Patches
 {
-    [HarmonyPatch(typeof(CameraDriver), nameof(CameraDriver.Update))]
+    [SoyuzPatch(typeof(CameraDriver), nameof(CameraDriver.Update))]
     public class CameraDriver_Patch
     {
         public static void Postfix(CameraDriver __instance)
