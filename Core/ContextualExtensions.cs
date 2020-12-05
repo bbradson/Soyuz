@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using RimWorld;
 using RimWorld.Planet;
 using RocketMan;
+using Soyuz.Profiling;
 using UnityEngine;
 using Verse;
 
@@ -22,6 +25,12 @@ namespace Soyuz
 
         private static readonly int[] _transformationCache = new int[TransformationCacheSize];
         private static readonly Dictionary<int, int> timers = new Dictionary<int, int>();
+        
+        private static readonly Dictionary<Pawn, PawnPerformanceModel> pawnPerformanceModels = new Dictionary<Pawn, PawnPerformanceModel>();
+        private static readonly Dictionary<Pawn, Dictionary<Type,PawnNeedModel>> pawnNeedModels =
+            new Dictionary<Pawn, Dictionary<Type,PawnNeedModel>>();
+        private static readonly Dictionary<Pawn, Dictionary<Hediff,PawnHediffModel>> pawnHediffsModels =
+            new Dictionary<Pawn, Dictionary<Hediff,PawnHediffModel>>();
 
         private static int DilationRate
         {
@@ -45,6 +54,7 @@ namespace Soyuz
             }
         }
 
+        
         static ContextualExtensions()
         {
             for (int i = 0; i < _transformationCache.Length; i++)
@@ -88,6 +98,8 @@ namespace Soyuz
             return _isSkippingPawn;
         }
 
+        private static Stopwatch _stopwatch = new Stopwatch();
+
         public static void BeginTick(this Pawn pawn)
         {
             _pawnTick = pawn;
@@ -97,14 +109,64 @@ namespace Soyuz
                 _isSkippingPawn = false;
                 _skippingPawn = pawn;
             }
+            if (Finder.logData &&  Time.frameCount - Finder.lastFrame < 60)
+            {
+                _stopwatch.Reset();
+                _stopwatch.Start();
+            }
         }
 
         public static void EndTick(this Pawn pawn)
         {
-            _pawnTick = null;
-            _validPawn = null;
+            if (Finder.logData && Time.frameCount - Finder.lastFrame < 60)
+            {
+                _stopwatch.Stop();
+                var performanceModel = pawn.GetPerformanceModel();
+                performanceModel.AddResult(_stopwatch.ElapsedTicks);
+                if (GenTicks.TicksGame % 150 == 0 )
+                {
+                    var needsModel = pawn.GetNeedModels();
+                    if (pawn.needs?.needs != null)
+                        foreach (var need in pawn.needs?.needs)
+                        {
+                            var type = need.GetType();
+                            if (needsModel.TryGetValue(type, out var model)) model.AddResult(need.CurLevelPercentage);
+                            else needsModel[type] = new PawnNeedModel();
+                        }
+
+                    var hediffModel = pawn.GetHediffModels();
+                    foreach (var hediff  in pawn.health.hediffSet.hediffs)
+                    {
+                        if (hediffModel.TryGetValue(hediff, out var model)) model.AddResult(hediff.Severity);
+                        else hediffModel[hediff] = new PawnHediffModel();
+                    }
+                }
+            }
             _pawnScreen = null;
+            _pawnTick = null;
             _skippingPawn = null;
+            _validPawn = null;
+        }
+
+        public static PawnPerformanceModel GetPerformanceModel(this Pawn pawn)
+        {
+            if (pawnPerformanceModels.TryGetValue(pawn, out var model))
+                return model;
+            return pawnPerformanceModels[pawn] = new PawnPerformanceModel();
+        }
+        
+        public static Dictionary<Type,PawnNeedModel> GetNeedModels(this Pawn pawn)
+        {
+            if (pawnNeedModels.TryGetValue(pawn, out var model))
+                return model;
+            return pawnNeedModels[pawn] = new Dictionary<Type, PawnNeedModel>();
+        }
+        
+        public static Dictionary<Hediff,PawnHediffModel> GetHediffModels(this Pawn pawn)
+        {
+            if (pawnHediffsModels.TryGetValue(pawn, out var model))
+                return model;
+            return pawnHediffsModels[pawn] = new Dictionary<Hediff, PawnHediffModel>();
         }
 
         public static bool ShouldTick(this Pawn pawn)
@@ -163,16 +225,27 @@ namespace Soyuz
         }
 
         private static bool _isValidPawn = false;
-        private static Pawn _validPawn = null;
+        private static Pawn _validPawn = null; 
         public static bool IsValidWildlifeOrWorldPawn(this Pawn pawn)
         {
             if (_validPawn == pawn) 
                 return _isValidPawn;
             _validPawn = pawn;
-            _isValidPawn = (_pawnTick == pawn && !pawn.IsColonist && (
-                (Context.dilatedRaces[pawn.def.index] && ((pawn.factionInt == null && !Context.ignoreFaction[pawn.def.index]) || Context.ignoreFaction[pawn.def.index])) || 
+            int pawnInt = pawn.AsInt();
+            return _isValidPawn = (_pawnTick == pawn && !pawn.IsColonist && (
+                (pawnInt == (pawnInt & Context.dilationInts[pawn.def.index])) || 
                 (WorldPawnsTicker.isActive && Finder.timeDilationWorldPawns)));
-            return _isValidPawn;
+        }
+
+        public static int AsInt(this Pawn pawn)
+        {
+            int val = 1;
+            if (pawn.factionInt != null)
+            {
+                if (pawn.factionInt != Faction.OfPlayerSilentFail) val = val | 2;
+                else val = val | 4;
+            }
+            return val;
         }
     }
 }

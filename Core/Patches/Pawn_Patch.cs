@@ -56,11 +56,15 @@ namespace Soyuz.Patches
                         continue;
                     } 
                 }
+                if (codes[i].opcode == OpCodes.Ret)
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0) {labels = codes[i].labels};
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.EndTick)));
+                    codes[i].labels = new List<Label>();
+                }
                 yield return codes[i];
             }
             
-            yield return new CodeInstruction(OpCodes.Ldarg_0);
-            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ContextualExtensions), nameof(ContextualExtensions.EndTick)));
         }
 
         private static void TickExtras(Pawn pawn)

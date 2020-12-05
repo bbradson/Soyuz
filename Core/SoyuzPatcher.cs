@@ -40,7 +40,7 @@ namespace Soyuz
             this.generics = generics;
         }
     }
-
+    
     public class SoyuzPatchInfo
     {
         private SoyuzPatch attribute;
@@ -135,7 +135,7 @@ namespace Soyuz
             }
         }
     }
-
+    
     [StaticConstructorOnStartup]
     public class SoyuzPatcher
     {
@@ -143,14 +143,15 @@ namespace Soyuz
         
         private readonly static Harmony harmony = new Harmony(Finder.HarmonyID + ".Soyuz"); 
 
-        [RocketMan.Main.OnDefsLoaded]
+        [Main.OnDefsLoaded]
         public static void PatchAll()
         {
             foreach (var patch in patches)
                 patch.Patch(harmony);
             Log.Message($"SOYUZ: Patching finished");
+            Finder.soyuzLoaded = true;
         }
-
+        
         static SoyuzPatcher()
         {
             var flaggedTypes = GetSoyuzPatches();

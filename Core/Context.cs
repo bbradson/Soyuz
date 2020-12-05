@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using RocketMan;
+using Soyuz.Profiling;
 using Verse;
 
 namespace Soyuz
@@ -8,10 +11,10 @@ namespace Soyuz
         public static CameraZoomRange zoomRange;
         public static CellRect curViewRect;
         public static SoyuzSettings settings;
+        public static SoyuzMod soyuz;
 
-        public static bool[] dilatedRaces = new bool[ushort.MaxValue];
-        public static bool[] ignoreFaction = new bool[ushort.MaxValue];
-
-        public static RocketMan.RocketMod rocketMod;
+        public static readonly int[] dilationInts = new int[ushort.MaxValue];
+        public static readonly Dictionary<ThingDef, RaceSettings> dilationByDef =
+            new Dictionary<ThingDef, RaceSettings>();
     }
 }

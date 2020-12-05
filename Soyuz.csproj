@@ -8,21 +8,23 @@
     <RootNamespace>Soyuz</RootNamespace>
     <AssemblyName>Soyuz</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Assemblies</OutputPath>
+    <OutputPath>..\..\..\RocketMan\Plugins</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Assemblies</OutputPath>
+    <OutputPath>..\..\..\RocketMan\Plugins</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -94,11 +96,15 @@
     <Compile Include="Core\Patches\Pawn_RecordsTracker_Patch.cs" />
     <Compile Include="Core\Patches\Pawn_SkillsTracker_Patch.cs" />
     <Compile Include="Core\Patches\WorldPawns_Patch.cs" />
+    <Compile Include="Core\Profiling\ITab_History.cs" />
+    <Compile Include="Core\Profiling\PawnHediffModel.cs" />
+    <Compile Include="Core\Profiling\PawnNeedModel.cs" />
+    <Compile Include="Core\Profiling\PawnPerformanceModel.cs" />
+    <Compile Include="Core\SoyuzMod.cs" />
     <Compile Include="Core\SoyuzPatcher.cs" />
     <Compile Include="Core\SoyuzSettings.cs" />
     <Compile Include="Core\WorldPawnsTicker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoyuzMod.cs" />
     <Compile Include="Core\Patches\Pawn_PathFollower_Patch.cs" />
   </ItemGroup>
   <ItemGroup>
