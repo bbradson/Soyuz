@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{1C665C01-C92E-470E-B8E5-7734F76A0CBD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Soyuz</RootNamespace>
+    <AssemblyName>Soyuz</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\RocketMan\Source\packages\Lib.Harmony.2.0.1\lib\net472\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_prepatched_public">
+      <HintPath>..\..\..\AssemblyPublicizer\Assembly-CSharp_prepatched_public.dll</HintPath>
+    </Reference>
+    <Reference Include="HugsLib">
+      <HintPath>C:\Games\RimWorld\Mods\818773962\Assemblies\HugsLib.dll</HintPath>
+    </Reference>
+    <Reference Include="RocketMan">
+      <HintPath>..\..\RocketMan\Assemblies\RocketMan.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Games\RimWorld\RimWorldWin64_Data\Managed\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Games\RimWorld\RimWorldWin64_Data\Managed\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Games\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Games\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Games\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context.cs" />
+    <Compile Include="ContextualExtensions.cs" />
+    <Compile Include="Patches\CameraDriver_Patch.cs" />
+    <Compile Include="Patches\HediffComp_Patch.cs" />
+    <Compile Include="Patches\Hediff_BleedRate_Patch.cs" />
+    <Compile Include="Patches\Hediff_Pregnant_Tick_Patch.cs" />
+    <Compile Include="Patches\Hediff_Tick_Patch.cs" />
+    <Compile Include="Patches\ImmunityRecord_ImmunityChangePerTick_Patch.cs" />
+    <Compile Include="Patches\JobDriver_DriverTick_Patch.cs" />
+    <Compile Include="Patches\MentalBreaker_MentalStateTick_Patch.cs" />
+    <Compile Include="Patches\MentalState_MentalStateTick_Patch.cs" />
+    <Compile Include="Patches\Need_Rest_TickResting_Patch.cs" />
+    <Compile Include="Patches\Pawn_AgeTracker_AgeTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_CallTracker_CallTrackerTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_HealthTracker_Tick_Patch.cs" />
+    <Compile Include="Patches\Pawn_JobTracker_JobTrackerTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_MindState_MindStateTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_NeedsTracker_NeedTrackerTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_PathFollower_Patch.cs" />
+    <Compile Include="Patches\Pawn_RecordsTracker_Patch.cs" />
+    <Compile Include="Patches\Pawn_SkillsTracker_SkillsTick_Patch.cs" />
+    <Compile Include="Patches\Pawn_Tick_Patch.cs" />
+    <Compile Include="Patches\WorldPawns_Patch.cs" />
+    <Compile Include="PatchType.cs" />
+    <Compile Include="Profiling\ITab_History.cs" />
+    <Compile Include="Profiling\PawnHediffModel.cs" />
+    <Compile Include="Profiling\PawnHediffRecord.cs" />
+    <Compile Include="Profiling\PawnNeedModel.cs" />
+    <Compile Include="Profiling\PawnNeedRecord.cs" />
+    <Compile Include="Profiling\PawnPerformanceModel.cs" />
+    <Compile Include="Profiling\PawnPerformanceRecord.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaceSettings.cs" />
+    <Compile Include="SoyuzDebuggingGUIUtility.cs" />
+    <Compile Include="SoyuzPatch.cs" />
+    <Compile Include="SoyuzPatcher.cs" />
+    <Compile Include="SoyuzPatchInfo.cs" />
+    <Compile Include="SoyuzSettings.cs" />
+    <Compile Include="SoyuzSettingsGUIUtility.cs" />
+    <Compile Include="SoyuzSettingsUtility.cs" />
+    <Compile Include="WorldPawnsTicker.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

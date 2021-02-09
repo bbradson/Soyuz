@@ -1,0 +1,16 @@
+E:\Users\lolana\soyuz\Soyuz\bin\Release\Soyuz.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\0Harmony.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\Assembly-CSharp_prepatched_public.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\HugsLib.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\RocketMan.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\System.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\UnityEngine.CoreModule.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\UnityEngine.IMGUIModule.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\UnityEngine.TextRenderingModule.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\UnityEngine.SharedInternalsModule.dll
+E:\Users\lolana\soyuz\Soyuz\bin\Release\HugsLib.xml
+E:\Users\lolana\soyuz\Soyuz\bin\Release\RocketMan.pdb
+E:\Users\lolana\soyuz\Soyuz\obj\x64\Release\Soyuz.csprojAssemblyReference.cache
+E:\Users\lolana\soyuz\Soyuz\obj\x64\Release\Soyuz.csproj.CoreCompileInputs.cache
+E:\Users\lolana\soyuz\Soyuz\obj\x64\Release\Soyuz.csproj.CopyComplete
+E:\Users\lolana\soyuz\Soyuz\obj\x64\Release\Soyuz.dll
